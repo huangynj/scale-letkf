@@ -131,6 +131,66 @@ if ((MYRANK == 0)); then
   echo "[$(datetime_now)] ### 5-6" >&2
 fi
 
+
+
+
+if ((BDY_FORMAT == 1)); then
+  . src/func_util.sh
+  . src/func_distribute.sh
+
+  distribute_da_cycle - - $NODEFILE_DIR/distr "$MEMBERS"
+
+  if ((DISK_MODE_DATA_BDY == 2)); then
+    bdy_loc=${TMPDAT_S}/bdyscale
+  else
+    bdy_loc=${TMPDAT_L}/bdyscale
+  fi
+
+  nbdy_all=0
+  time=$STIME
+  while ((time <= ETIME)); do
+
+#echo "bdy_setting $time $CYCLEFLEN $BDYCYCLE_INT $PARENT_REF_TIME $BDYINT" >&2
+    bdy_setting $time $CYCLEFLEN $BDYCYCLE_INT $PARENT_REF_TIME $BDYINT
+
+    for ibdy in $(seq $nbdy); do
+      time_bdy=${bdy_times[$ibdy]}
+
+#echo $time_bdy >&2
+
+      bdy_processed=0
+      for ibdy2 in $(seq $nbdy_all); do
+        if ((${bdy_times_all[$ibdy2]} == $time_bdy)); then
+          bdy_processed=1
+          break
+        fi
+      done
+
+      if ((bdy_processed == 0)); then
+        nbdy_all=$((nbdy_all+1))
+        bdy_times_all[${nbdy_all}]=$time_bdy
+
+        m=$((MYRANK+1))
+
+#echo $m >&2
+#echo "${bdy_loc}/${time_bdy}/${name_m[$m]}.tar" >&2
+
+        while [ -s "${bdy_loc}/${time_bdy}/${name_m[$m]}.tar" ]; do
+          echo "%%%%%% $(date) %%%%%% start extract ${bdy_loc}/${time_bdy}/${name_m[$m]}.tar" >&2
+          ( cd ${bdy_loc}/${time_bdy} && tar xvf ${name_m[$m]}.tar >&2 && rm -f ${name_m[$m]}.tar )
+          echo "%%%%%% $(date) %%%%%% end" >&2
+          m=$((m + NNODES))
+        done
+      fi # ((bdy_processed == 0))
+    done
+
+    time=$(datetime $time $LCYCLE s)
+  done
+fi
+
+
+
+
 #===============================================================================
 
 exit 0

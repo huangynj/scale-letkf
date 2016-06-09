@@ -1023,8 +1023,14 @@ else
 #                    echo "${pathin}|${path}" >> $STAGING_DIR/stagein.dat
 #                  fi
 #                done
-                pathin="$DATA_BDY_SCALE/${time_bdy}/hist/${mem}"
-                path="bdyscale/${time_bdy}/${name_m[$m]}"
+
+
+####                pathin="$DATA_BDY_SCALE/${time_bdy}/hist/${mem}"
+####                path="bdyscale/${time_bdy}/${name_m[$m]}"
+                pathin="$DATA_BDY_SCALE/${time_bdy}/hist/${mem}.tar"
+                path="bdyscale/${time_bdy}/${name_m[$m]}.tar"
+
+
                 if ((DISK_MODE_DATA_BDY == 2)); then
                   echo "${pathin}|${path}|s" >> $STAGING_DIR/stagein.dat
                 else
@@ -1041,8 +1047,14 @@ else
 #                  echo "${pathin}|${path}" >> $STAGING_DIR/stagein.dat
 #                fi
 #              done
-              pathin="$DATA_BDY_SCALE/${time_bdy}/hist/meanf"
-              path="bdyscale/${time_bdy}/mean"
+
+
+####              pathin="$DATA_BDY_SCALE/${time_bdy}/hist/meanf"
+####              path="bdyscale/${time_bdy}/mean"
+              pathin="$DATA_BDY_SCALE/${time_bdy}/hist/meanf.tar"
+              path="bdyscale/${time_bdy}/mean.tar"
+
+
               if ((DISK_MODE_DATA_BDY == 2)); then
                 echo "${pathin}|${path}|s" >> $STAGING_DIR/stagein.dat
               else
