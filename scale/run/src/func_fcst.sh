@@ -86,7 +86,8 @@ IF_EFSO=${1:-$IF_EFSO}; shift
 ISTEP=${1:-$ISTEP}; shift
 FSTEP=${1:-$FSTEP}; shift
 CONF_MODE=${1:-$CONF_MODE}; shift
-TIME_LIMIT="${1:-$TIME_LIMIT}"
+TIME_LIMIT="${1:-$TIME_LIMIT}"; shift
+TNO="${1:-$TNO}"
 
 #-------------------------------------------------------------------------------
 # if some necessary parameters are not given, print the usage help and exit
