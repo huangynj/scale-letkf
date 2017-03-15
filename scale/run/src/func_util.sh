@@ -589,6 +589,52 @@ fi
 
 #===============================================================================
 
+mv_to_outdir () {
+#-------------------------------------------------------------------------------
+# Submit a PJM job.
+#
+# Usage: job_submit_PJM
+#
+#   JOBSCRP  Job script
+#
+# Return variables:
+#   $jobid  Job ID monitered
+#-------------------------------------------------------------------------------
+
+if (($# < 1)); then
+  echo "[Error] $FUNCNAME: Insufficient arguments." >&2
+  exit 1
+fi
+
+SINGLE_FILE
+SORC_DIR
+SORC_PREFIX
+DEST_DIR
+DEST_PREFIX_1
+DEST_PREFIX_2
+SUFFIX
+
+#-------------------------------------------------------------------------------
+
+if ((SINGLE_FILE == 1)); then
+  mkdir -p ${DEST_DIR}
+  ifile="restart_${ATIME:0:8}-${ATIME:8:6}.000.nc"
+  if [ -e "${SORC_DIR}/${SORC_PREFIX_1}${SUFFIX}" ]; then
+    mv -f ${SORC_DIR}/${SORC_PREFIX_1}${SUFFIX} ${DEST_DIR}/${DEST_PREFIX_1}.${DEST_PREFIX_2}${SUFFIX}
+  fi
+else
+  mkdir -p ${DEST_DIR}/${DEST_PREFIX_1}
+  local len=${#SORC_PREFIX}
+  for ifile in $(cd $SORC_DIR ; ls ${SORC_PREFIX}*${SUFFIX}); do
+    mv -f ${SORC_DIR}/${ifile} ${DEST_DIR}/${DEST_PREFIX_1}/${DEST_PREFIX_2}${ifile:$len}
+  done
+fi
+
+#-------------------------------------------------------------------------------
+}
+
+#===============================================================================
+
 job_submit_PJM () {
 #-------------------------------------------------------------------------------
 # Submit a PJM job.
